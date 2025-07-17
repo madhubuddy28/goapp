@@ -29,7 +29,7 @@ pipeline {
           env.IMAGE_TAG = "${ACR_LOGIN_SERVER}/${IMAGE_NAME}:${BUILD_NUMBER}"
           sh """
             echo "Building Docker image ${env.IMAGE_TAG}..."
-            docker build -t ${env.IMAGE_TAG} .
+            /opt/homebrew/bin/docker build -t ${env.IMAGE_TAG} .
           """
         }
       }
