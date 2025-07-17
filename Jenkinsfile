@@ -8,6 +8,11 @@ pipeline {
     HELM_RELEASE = 'go-sample-app'
     HELM_CHART_PATH = './myapp'
     KUBE_NAMESPACE = 'gonamespace'
+    AZURE_CLIENT_ID       = credentials('AZURE_CLIENT_ID')
+    AZURE_CLIENT_SECRET   = credentials('AZURE_CLIENT_SECRET')
+    AZURE_TENANT_ID       = credentials('AZURE_TENANT_ID')
+    AZURE_SUBSCRIPTION_ID = credentials('AZURE_SUBSCRIPTION_ID')
+    PATH = "/opt/homebrew/bin:/usr/local/bin:$PATH" // Add az path here
   }
 
   parameters {
@@ -40,6 +45,12 @@ pipeline {
       steps {
         script {
           sh """
+          az login --service-principal \
+            --username "$AZURE_CLIENT_ID" \
+            --password "$AZURE_CLIENT_SECRET" \
+            --tenant "$AZURE_TENANT_ID"
+
+          az acr login --name goacr
             echo "Logging into ACR..."
             az acr login --name ${ACR_NAME}
             echo "Pushing ${env.IMAGE_TAG}..."
