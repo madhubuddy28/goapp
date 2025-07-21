@@ -39,7 +39,7 @@ pipeline {
       when { expression { !params.ROLLBACK } }
       steps {
         script {
-          withCredentials([azureServicePrincipal('credentials_id')]) {
+          withCredentials([azureServicePrincipal('credentials_id : 'sp'')]) {
     sh 'az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID'
 }
           sh """
