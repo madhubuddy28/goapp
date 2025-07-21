@@ -8,8 +8,8 @@ pipeline {
     HELM_RELEASE = 'go-sample-app'
     HELM_CHART_PATH = './myapp'
     KUBE_NAMESPACE = 'gonamespace'
-    SP_APP_ID = credentials('azure-sp').username
-    SP_PASSWORD = credentials('azure-sp').password
+    SP_APP_ID = 'credentials('azure-sp').username'
+    SP_PASSWORD = 'credentials('azure-sp').password'
     TENANT_ID = '4f4321b5-c344-4de4-9f18-7afb12955a5a'  // from az ad sp
   }
 
