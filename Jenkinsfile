@@ -8,11 +8,9 @@ pipeline {
     HELM_RELEASE = 'go-sample-app'
     HELM_CHART_PATH = './myapp'
     KUBE_NAMESPACE = 'gonamespace'
-    AZURE_CLIENT_ID       = credentials('AZURE_CLIENT_ID')
-    AZURE_CLIENT_SECRET   = credentials('AZURE_CLIENT_SECRET')
-    AZURE_TENANT_ID       = credentials('AZURE_TENANT_ID')
-    AZURE_SUBSCRIPTION_ID = credentials('AZURE_SUBSCRIPTION_ID')
-    PATH = "/opt/homebrew/bin:/usr/local/bin:$PATH" // Add az path here
+    SP_APP_ID = credentials('azure-sp').username
+    SP_PASSWORD = credentials('azure-sp').password
+    TENANT_ID = '4f4321b5-c344-4de4-9f18-7afb12955a5a'  // from az ad sp
   }
 
   parameters {
