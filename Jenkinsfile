@@ -8,9 +8,6 @@ pipeline {
     HELM_RELEASE = 'go-sample-app'
     HELM_CHART_PATH = './myapp'
     KUBE_NAMESPACE = 'gonamespace'
-    SP_APP_ID = 'credentials('azure-sp').username'
-    SP_PASSWORD = 'credentials('azure-sp').password'
-    TENANT_ID = '4f4321b5-c344-4de4-9f18-7afb12955a5a'  // from az ad sp
   }
 
   parameters {
@@ -42,12 +39,10 @@ pipeline {
       when { expression { !params.ROLLBACK } }
       steps {
         script {
+          withCredentials([azureServicePrincipal('credentials_id')]) {
+    sh 'az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID'
+}
           sh """
-          az login --service-principal \
-            --username "$AZURE_CLIENT_ID" \
-            --password "$AZURE_CLIENT_SECRET" \
-            --tenant "$AZURE_TENANT_ID"
-
           az acr login --name goacr
             echo "Logging into ACR..."
             az acr login --name ${ACR_NAME}
