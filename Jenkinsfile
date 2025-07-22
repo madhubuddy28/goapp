@@ -41,11 +41,7 @@ pipeline {
       steps {
         script {
           withCredentials([azureServicePrincipal('sp')]) {
-    sh '    echo "Logging into Azure..."
-    az login --service-principal \
-      --username "$AZURE_CLIENT_ID" \
-      --password="$AZURE_CLIENT_SECRET" \
-      --tenant "$AZURE_TENANT_ID" '
+    sh 'az login --service-principal -u $AZURE_CLIENT_ID -p="$AZURE_CLIENT_SECRET" -t $AZURE_TENANT_ID'
 }
           sh """
             az acr login --name ${ACR_NAME}
