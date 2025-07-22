@@ -2,6 +2,7 @@ pipeline {
   agent any
 
   environment {
+    PATH = "/opt/homebrew/bin:/usr/local/bin:$PATH"  // Add path to az here
     ACR_NAME = 'goacr'
     ACR_LOGIN_SERVER = "${ACR_NAME}.azurecr.io"
     IMAGE_NAME = 'go-sample-app'
