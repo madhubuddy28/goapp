@@ -33,7 +33,7 @@ pipeline {
       when { expression { !params.ROLLBACK } }
       steps {
         script {
-          dockerBuildPush("${ACR_LOGIN_SERVER}/${IMAGE_NAME}", IMAGE_TAG)
+          dockerBuildAndPush("${ACR_LOGIN_SERVER}/${IMAGE_NAME}", IMAGE_TAG)
         }
       }
     }
