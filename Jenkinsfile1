@@ -1,0 +1,75 @@
+@Library('shared-lib') _
+
+pipeline {
+  agent any
+
+  environment {
+    PATH = "/opt/homebrew/bin:/usr/local/bin:$PATH"
+    ACR_NAME = 'goacr'
+    ACR_LOGIN_SERVER = "${ACR_NAME}.azurecr.io"
+    IMAGE_NAME = 'go-sample-app'
+    HELM_RELEASE = 'go-sample-app'
+    HELM_CHART_PATH = './myapp'
+    KUBE_NAMESPACE = 'gonamespace'
+    IMAGE_TAG = "v${BUILD_NUMBER}"
+    AKS_RG = ''
+    AKS_CLUSTER = ''
+    KUBE_NAMESPACE = 'payments-namespace'
+  }
+
+  parameters {
+    booleanParam(name: 'ROLLBACK', defaultValue: false)
+  }
+
+  stages {
+    stage('ACR Login') {
+      steps {
+        script {
+          acrLogin(ACR_NAME)
+        }
+      }
+    }
+
+    stage('Build & Push Docker Image') {
+      when { expression { !params.ROLLBACK } }
+      steps {
+        script {
+          dockerBuildPush("${ACR_LOGIN_SERVER}/${IMAGE_NAME}", IMAGE_TAG)
+        }
+      }
+    }
+
+    stage('AKS Auth') {
+      steps {
+        script {
+          aksAuth(AKS_RG, AKS_CLUSTER)
+        }
+      }
+    }
+
+    stage('Helm Deploy') {
+      when { expression { !params.ROLLBACK } }
+      steps {
+        script {
+          helmDeploy(
+            ACR_LOGIN_SERVER,
+            IMAGE_NAME,
+            IMAGE_TAG,
+            HELM_CHART_PATH,
+            HELM_RELEASE,
+            KUBE_NAMESPACE
+          )
+        }
+      }
+    }
+
+    stage('Rollback') {
+      when { expression { params.ROLLBACK } }
+      steps {
+        script {
+          helmRollback(HELM_RELEASE, KUBE_NAMESPACE)
+        }
+      }
+    }
+  }
+}
