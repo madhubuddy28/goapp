@@ -33,10 +33,15 @@ pipeline {
       when { expression { !params.ROLLBACK } }
       steps {
         script {
-          dockerBuildAndPush("${ACR_LOGIN_SERVER}/${IMAGE_NAME}", IMAGE_TAG)
+          dockerBuildAndPush([
+            acrName: env.ACR_NAME,
+            imageName: env.IMAGE_NAME,
+            tag: env.BUILD_NUMBER
+          ])
         }
       }
     }
+
 
     stage('AKS Auth') {
       steps {
