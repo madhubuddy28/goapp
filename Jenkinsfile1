@@ -12,8 +12,8 @@ pipeline {
     HELM_CHART_PATH = './myapp'
     KUBE_NAMESPACE = 'gonamespace'
     IMAGE_TAG = "v${BUILD_NUMBER}"
-    AKS_RG = ''
-    AKS_CLUSTER = ''
+    AKS_RG = 'MHRIL_Golang'
+    AKS_CLUSTER = 'mhril-go-deploy-dev'
   }
 
   parameters {
